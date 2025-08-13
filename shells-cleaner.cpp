@@ -13,18 +13,18 @@
 #include <string>
 
 void cleanShells() {
-    DIR *dir;
-    dirent *entry;
-    std::string path;
-    std::string exePathBuffer(256, 0);
-
-    dir = opendir("/proc");
+    DIR *dir = opendir("/proc");
     if (dir == nullptr) {
         return;
     }
 
+    dirent *entry;
+    std::string path;
+    std::string exePathBuffer(256, 0);
+
     while ((entry = readdir(dir))) {
-        if (entry->d_type != DT_DIR || atoi(entry->d_name) == 0)
+        pid_t pid = atoi(entry->d_name);
+        if (entry->d_type != DT_DIR || pid == 0)
             continue;
 
         path = std::string("/proc/") + entry->d_name + "/exe";
@@ -35,7 +35,7 @@ void cleanShells() {
 
         if (exePathBuffer.find("/bash") == std::string::npos) continue;
 
-        kill(atoi(entry->d_name), SIGKILL);
+        kill(pid, SIGKILL);
     }
     closedir(dir);
 }

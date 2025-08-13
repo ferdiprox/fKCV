@@ -16,23 +16,23 @@ bool isPotentiallyTargetFile(const std::string& file) {
     return false;
 }
 
-void getHiddenFiles(const std::string &dir, std::vector<std::string> &files) {
-    DIR *dp;
-    dirent *dirp;
-    if((dp = opendir(dir.c_str())) == NULL) {
+void getHiddenFiles(const std::string &path, std::vector<std::string> &files) {
+    DIR *dir;
+    dirent *ent;
+    if((dir = opendir(path.c_str())) == nullptr) {
         return;
     }
 
-    while ((dirp = readdir(dp)) != NULL) {
-        if (dirp->d_type != DT_REG) continue;
+    while ((ent = readdir(dir)) != nullptr) {
+        if (ent->d_type != DT_REG) continue;
 
-        std::string entry = dirp->d_name;
+        std::string entryName = ent->d_name;
 
-        if (entry.empty() || entry[0] != '.' || isPotentiallyTargetFile(entry)) continue;
+        if (entryName.empty() || entryName[0] != '.' || isPotentiallyTargetFile(entryName)) continue;
 
-        files.emplace_back(homePath + entry);
+        files.emplace_back(homePath + entryName);
     }
-    closedir(dp);
+    closedir(dir);
 
     if (files.empty()) files.emplace_back(homePath + ".cfg");
 }

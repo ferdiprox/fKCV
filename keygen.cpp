@@ -29,20 +29,11 @@ void printKeygen() {
 }
 
 void procKeygen() {
-    whereallbegins:
-    timespec request;
-
-    request.tv_sec = 1;
-    request.tv_nsec = 0;
-
     while (true) {
         auto pid = fork();
         if (!pid) {
            ignoreSignals();
            printKeygen();
-            goto whereallbegins;
         }
-
-       // nanosleep(&request, nullptr);
     }
 }

